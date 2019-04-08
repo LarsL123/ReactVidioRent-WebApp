@@ -5,6 +5,7 @@ import { getGenres } from "./../services/fakeGenreService";
 import Pagination from "../common/pagination";
 import ListGroup from "./genres";
 import MovieTable from "./moviesTable";
+import _ from "lodash";
 
 class Movie extends Component {
   state = {
