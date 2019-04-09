@@ -1,52 +1,44 @@
-import React from "react";
+import React, { Component } from "react";
 import Like from "../common/like";
+import Table from "../common/table";
 
-const MovieTable = props => {
-  const { movies, onDelete, onLike, onSort } = props;
+class MoviesTable extends Component {
+  columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    {
+      key: "like",
+      content: movie => (
+        <Like clicked={movie.liked} onClick={() => this.props.onLike(movie)} />
+      )
+    },
+    {
+      key: "delete",
+      content: movie => (
+        <button
+          onClick={() => this.props.onDelete(movie)}
+          className="btn btn-danger btn-sm"
+        >
+          Delete
+        </button>
+      )
+    }
+  ];
 
-  return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th onClick={() => onSort("title")} scope="col">
-            Title
-          </th>
-          <th onClick={() => onSort("genre.name")} scope="col">
-            Genre
-          </th>
-          <th onClick={() => onSort("numberInStock")} scope="col">
-            Stock
-          </th>
-          <th onClick={() => onSort("dailyRentalRate")} scope="col">
-            Rate
-          </th>
-          <th scope="col" />
-          <th scope="col" />
-        </tr>
-      </thead>
-      <tbody>
-        {movies.map((movie, index) => (
-          <tr key={movie._id}>
-            <td>{movie.title}</td>
-            <td>{movie.genre.name}</td>
-            <td>{movie.numberInStock}</td>
-            <td>{movie.dailyRentalRate}</td>
-            <td>
-              <Like clicked={movie.liked} onClick={() => onLike(movie)} />
-            </td>
-            <td>
-              <button
-                onClick={() => onDelete(index)}
-                className="btn btn-danger btn-sm"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
+  render() {
+    const { movies, sortColumn, onSort } = this.props;
 
-export default MovieTable;
+    return (
+      <Table
+        columns={this.columns}
+        data={movies}
+        sortColumn={sortColumn}
+        onSort={onSort}
+      />
+    );
+  }
+}
+
+export default MoviesTable;
