@@ -1,6 +1,6 @@
 import React from "react";
 
-//sfc- stateless function component
+//sfc- stateless function component yeye
 
 const Like = props => {
   //The filled and empty heart classes from font-awsome
