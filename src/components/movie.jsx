@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { getMovies } from "../services/fakeMovieService";
 import { paginate } from "../utils/paginate";
 import { getGenres } from "./../services/fakeGenreService";
@@ -6,6 +7,7 @@ import Pagination from "../common/pagination";
 import ListGroup from "./genres";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
+import { Redirect } from "react-router-dom";
 
 class Movie extends Component {
   state = {
@@ -75,6 +77,18 @@ class Movie extends Component {
   };
 
   render() {
+    if (this.props.match.params._id !== undefined) {
+      return (
+        <React.Fragment>
+          <h1>Movie id: {this.props.match.params._id}</h1>
+          <button type="button" className="btn btn-primary">
+            Save
+            <Link to="/movies">Save</Link>
+          </button>
+        </React.Fragment>
+      );
+    }
+
     const {
       pageSize,
       currentPage,
