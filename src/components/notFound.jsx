@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 const NotFound = () => {
   return <h1>Page not found! Try a nother link.</h1>;
