@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { getMovies } from "../services/fakeMovieService";
+import { getMovies, deleteMovie } from "../services/fakeMovieService";
 import { paginate } from "../utils/paginate";
 import { getGenres } from "./../services/fakeGenreService";
 import Pagination from "../common/pagination";
 import ListGroup from "./genres";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
+import { NavLink } from "react-router-dom";
 
 class Movie extends Component {
   state = {
@@ -32,9 +33,9 @@ class Movie extends Component {
     this.setState({ movies });
   };
 
-  handleDelete = index => {
-    const movies = this.state.movies.filter(c => c !== index);
-    this.setState({ movies });
+  handleDelete = movie => {
+    deleteMovie(movie._id);
+    this.setState({ movies: getMovies() });
   };
 
   handlePageChange = page => {
@@ -101,6 +102,9 @@ class Movie extends Component {
         </div>
         <div className="col">
           <h6> There are {totalCount} movies</h6>
+          <NavLink classname="btn btn-primary" to="/movies/new">
+            New
+          </NavLink>
 
           <MoviesTable
             movies={movies}

@@ -6,6 +6,7 @@ import Link from "react-router-dom/Link";
 class MoviesTable extends Component {
   columns = [
     {
+      key: "title",
       label: "Title",
       content: movie => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
     },
