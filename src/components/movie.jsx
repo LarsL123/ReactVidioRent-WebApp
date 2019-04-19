@@ -6,7 +6,7 @@ import Pagination from "../common/pagination";
 import ListGroup from "./genres";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class Movie extends Component {
   state = {
@@ -102,9 +102,13 @@ class Movie extends Component {
         </div>
         <div className="col">
           <h6> There are {totalCount} movies</h6>
-          <NavLink classname="btn btn-primary" to="/movies/new">
-            New
-          </NavLink>
+          <Link
+            className="btn btn-primary"
+            to="/movies/new"
+            style={{ marginBottom: 20 }}
+          >
+            New Movie
+          </Link>
 
           <MoviesTable
             movies={movies}

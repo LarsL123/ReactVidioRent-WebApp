@@ -3,29 +3,41 @@ import { getMovie, saveMovie } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import Joi from "joi-browser";
 import Form from "../common/form";
+import { Redirect } from "react-router-dom";
 
 class MovieForm extends Form {
   state = {
     data: { title: "", numberInStock: "", rate: "" },
     errors: {},
 
-    genre: {}
+    movieId: {},
+    genreId: {}
   };
 
   componentDidMount() {
     const { _id } = this.props.match.params;
 
-    if (_id !== undefined) {
-      const { title, numberInStock, dailyRentalRate, genre } = getMovie(_id);
-      const data = {
-        title: title,
-        numberInStock: numberInStock,
-        rate: dailyRentalRate
-      };
-      this.setState({ data, genre: genre._id });
+    if (_id) {
+      const movie = getMovie(_id);
+      if (!movie) {
+        this.props.history.push("/not-found");
+        return;
+      }
+
+      const { title, numberInStock, dailyRentalRate, genre } = movie;
+
+      this.setState({
+        data: {
+          title: title,
+          numberInStock: numberInStock,
+          rate: dailyRentalRate
+        },
+        movieId: _id,
+        genreId: genre._id
+      });
     } else {
       const genras = getGenres();
-      this.setState({ genre: genras[0]._id });
+      this.setState({ genreId: genras[0]._id });
     }
   }
 
@@ -44,17 +56,30 @@ class MovieForm extends Form {
   };
 
   doSubmit = () => {
-    const { data, genre } = this.state;
+    const { data, genreId, movieId } = this.state;
 
     const movie = {
+      _id: movieId,
       title: data.title,
       numberInStock: data.numberInStock,
       dailyRentalRate: data.rate,
-      genreId: genre
+      genreId: genreId
     };
-    console.log(movie);
+
     saveMovie(movie);
+    this.props.history.replace("/movies");
   };
+
+  mapGenras(selectedGneraId) {
+    const genras = getGenres().map(g => {
+      let h = { value: g._id, label: g.name };
+      if (g._id === selectedGneraId) {
+        h.selected = true;
+      }
+      return h;
+    });
+    return genras;
+  }
 
   render() {
     return (
@@ -66,8 +91,8 @@ class MovieForm extends Form {
           {this.renderInputField("rate", "Rate")}
           {this.renderSelectInputField(
             "Genres",
-            getGenres().map(g => g),
-            event => this.setState({ genre: event.target.value })
+            this.mapGenras(this.state.genreId),
+            event => this.setState({ genreId: event.target.value })
           )}
 
           {this.renderSubmitButton("Register")}

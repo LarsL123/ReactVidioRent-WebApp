@@ -84,7 +84,7 @@ export function saveMovie(movie) {
   movieInDb.dailyRentalRate = movie.dailyRentalRate;
 
   if (!movieInDb._id) {
-    movieInDb._id = Date.now();
+    movieInDb._id = "" + Date.now();
     movies.push(movieInDb);
   }
 
@@ -92,7 +92,9 @@ export function saveMovie(movie) {
 }
 
 export function deleteMovie(id) {
+  console.log(id);
   let movieInDb = movies.find(m => m._id === id);
+  console.log(movies.indexOf(movieInDb), movieInDb);
   movies.splice(movies.indexOf(movieInDb), 1);
   return movieInDb;
 }
