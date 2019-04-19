@@ -41,7 +41,9 @@ class Form extends Component {
     this.doSubmit();
   };
 
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = event => {
+    console.log(event.target.name);
+    const { currentTarget: input } = event;
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(input);
     if (errorMessage) {
@@ -79,8 +81,19 @@ class Form extends Component {
     );
   }
 
-  renderSelectInputField(label, options, onChange) {
-    return <SelectForm label={label} options={options} onChange={onChange} />;
+  renderSelectInputField(name, label, options) {
+    const { errors, data } = this.state;
+
+    return (
+      <SelectForm
+        name={name}
+        value={data[name]}
+        label={label}
+        options={options}
+        onChange={this.handleChange}
+        errors={errors[name]}
+      />
+    );
   }
 }
 

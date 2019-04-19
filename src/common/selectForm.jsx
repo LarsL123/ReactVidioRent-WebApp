@@ -1,22 +1,28 @@
 import React from "react";
 
-//: Options is an array of {value, (string)label and (booolen)selected}
+//: Options is an array of:
+//:(id, whats returned when a label is selected)value, (string)label and (optional booolen)selected}
+
 //: onChange is a method with the paramitor event e.
-const SelectForm = ({ label, options, onChange }) => {
+const SelectForm = ({ name, label, value, options, onChange, error }) => {
   return (
     <div className="form-group">
-      <label htmlFor="exampleFormControlSelect1">{label}</label>
+      <label htmlFor={name}>{label}</label>
       <select
+        value={value}
         onChange={onChange}
-        id="exampleFormControlSelect1"
+        id={name}
         className="form-control"
+        name={name}
       >
-        {options.map((g, i) => (
-          <option key={i} selected={g.selected} value={g.value}>
-            {g.label}
+        <option>{""}</option>
+        {options.map((option, index) => (
+          <option key={index} selected={option.selected} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>
+      {error && <div className="alert alert-danger">{error}></div>}
     </div>
   );
 };
