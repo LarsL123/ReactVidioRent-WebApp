@@ -7,6 +7,7 @@ import ListGroup from "./genres";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import SearchBox from "../common/searchBox";
 
 class Movie extends Component {
   state = {
@@ -15,7 +16,8 @@ class Movie extends Component {
     pageSize: 4,
     currentPage: 1,
     selectedGenre: null,
-    sortColumn: { path: "title", order: "asc" }
+    sortColumn: { path: "title", order: "asc" },
+    searchValue: ""
   };
 
   componentDidMount() {
@@ -43,12 +45,26 @@ class Movie extends Component {
   };
 
   handleGenreChange = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, currentPage: 1, searchValue: "" });
   };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
   };
+
+  handleSearch = searchString => {
+    this.setState({
+      searchValue: searchString,
+      currentPage: 1,
+      selectedGenre: null
+    });
+  };
+
+  search(movies) {
+    return movies.filter(m =>
+      m.title.toLowerCase().startsWith(this.state.searchValue.toLowerCase())
+    );
+  }
 
   getPagedData = () => {
     const {
@@ -56,13 +72,20 @@ class Movie extends Component {
       currentPage,
       movies: allMovies,
       selectedGenre,
-      sortColumn
+      sortColumn,
+      searchValue
     } = this.state;
 
-    let filteredMovies =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filteredMovies;
+
+    if (searchValue === "") {
+      filteredMovies =
+        selectedGenre && selectedGenre._id
+          ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+          : allMovies;
+    } else {
+      filteredMovies = this.search(allMovies);
+    }
 
     const sorted = _.orderBy(
       filteredMovies,
@@ -101,7 +124,6 @@ class Movie extends Component {
           />
         </div>
         <div className="col">
-          <h6> There are {totalCount} movies</h6>
           <Link
             className="btn btn-primary"
             to="/movies/new"
@@ -110,6 +132,14 @@ class Movie extends Component {
             New Movie
           </Link>
 
+          <div>
+            <h6> There are {totalCount} movies</h6>
+          </div>
+
+          <SearchBox
+            value={this.state.searchValue}
+            onChange={this.handleSearch}
+          />
           <MoviesTable
             movies={movies}
             sortColumn={sortColumn}
