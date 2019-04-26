@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie } from "../services/fakeMovieService";
+import { getMovies, deleteMovie } from "../services/movieService";
 import { paginate } from "../utils/paginate";
-import { getGenres } from "./../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
 import Pagination from "../common/pagination";
 import ListGroup from "./genres";
 import MoviesTable from "./moviesTable";
@@ -20,10 +20,14 @@ class Movie extends Component {
     searchValue: ""
   };
 
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+  async componentDidMount() {
+    const rawGenres = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...rawGenres];
+    console.log(genres);
 
-    this.setState({ genres, movies: getMovies(), selectedGenre: genres[0] });
+    const movies = await getMovies();
+
+    this.setState({ genres, movies, selectedGenre: genres[0] });
   }
 
   handleLike = movie => {
