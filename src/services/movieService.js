@@ -1,17 +1,32 @@
-import * as genresAPI from "./genreService";
-import httpService from "./httpService";
-import config from "./config.json";
+import http from "./httpService";
+import { apiUrl } from "../config.json";
 
-export async function getMovies() {
-  const { data: movies } = await httpService.get(config.apiMoviesEndpoint);
+const apiEndpoint = apiUrl + "/movies";
 
-  return movies;
+function movieUrl(id) {
+  return "${apiEndpoint}/${id}";
 }
 
-export function deleteMovie(id) {
-  /*console.log(id);
-    let movieInDb = movies.find(m => m._id === id);
-    console.log(movies.indexOf(movieInDb), movieInDb);
-    movies.splice(movies.indexOf(movieInDb), 1);
-    return movieInDb;*/
+export async function getMovies() {
+  return http.get(apiEndpoint);
+}
+
+export async function deleteMovie(id) {
+  return http.delete(movieUrl(id));
+}
+
+export function getMovie(id) {
+  return http.get(movieUrl(id));
+}
+
+export async function saveMovie(movie) {
+  movie._id = movie._id.trim();
+
+  if (movie._id) {
+    const body = { ...movie };
+    delete body._id;
+    return http.put(movieUrl(movie._id), body);
+  }
+  delete movie._id;
+  return http.post(apiEndpoint, movie);
 }

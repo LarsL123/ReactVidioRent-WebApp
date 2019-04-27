@@ -1,8 +1,13 @@
-import config from "./config.json";
+import { apiUrl } from "../config.json";
 import httpService from "./httpService.js";
 
+let genres;
+
 export async function getGenres() {
-  const { data: genres } = await httpService.get(config.apiGenresEndpoint);
+  if (!genres) {
+    const { data } = await httpService.get(apiUrl + "/genres");
+    genres = data;
+  }
 
   return genres;
 }

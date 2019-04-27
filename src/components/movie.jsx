@@ -25,7 +25,7 @@ class Movie extends Component {
     const genres = [{ _id: "", name: "All Genres" }, ...rawGenres];
     console.log(genres);
 
-    const movies = await getMovies();
+    const { data: movies } = await getMovies();
 
     this.setState({ genres, movies, selectedGenre: genres[0] });
   }
@@ -39,9 +39,20 @@ class Movie extends Component {
     this.setState({ movies });
   };
 
-  handleDelete = movie => {
-    deleteMovie(movie._id);
-    this.setState({ movies: getMovies() });
+  handleDelete = async movie => {
+    const originalMovies = this.state.movies;
+
+    const movies = this.state.movies.filter(p => p._id !== movie._id);
+    this.setState({ movies });
+
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        alert("This post has already been deleted");
+      }
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handlePageChange = page => {
