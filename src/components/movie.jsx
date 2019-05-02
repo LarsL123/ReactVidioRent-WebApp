@@ -120,8 +120,11 @@ class Movie extends Component {
       movies: allMovies,
       genres,
       selectedGenre,
-      sortColumn
+      sortColumn,
+      searchValue
     } = this.state;
+
+    const { user } = this.props;
 
     if (allMovies.length === 0) {
       return <p>There are no movies in the database</p>;
@@ -139,22 +142,21 @@ class Movie extends Component {
           />
         </div>
         <div className="col">
-          <Link
-            className="btn btn-primary"
-            to="/movies/new"
-            style={{ marginBottom: 20 }}
-          >
-            New Movie
-          </Link>
+          {user && (
+            <Link
+              className="btn btn-primary"
+              to="/movies/new"
+              style={{ marginBottom: 20 }}
+            >
+              New Movie
+            </Link>
+          )}
 
           <div>
             <h6> There are {totalCount} movies</h6>
           </div>
 
-          <SearchBox
-            value={this.state.searchValue}
-            onChange={this.handleSearch}
-          />
+          <SearchBox value={searchValue} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
             sortColumn={sortColumn}
