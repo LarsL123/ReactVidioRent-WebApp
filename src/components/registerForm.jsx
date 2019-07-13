@@ -6,22 +6,22 @@ import auth from "../services/authService";
 
 class RegisterForm extends Form {
   state = {
-    data: { username: "", password: "", name: "" },
+    data: { username: "", password: "", email: "" },
     errors: {}
   };
 
   schema = {
     username: Joi.string()
       .required()
-      .email()
       .label("Username"),
     password: Joi.string()
       .required()
       .min(5)
       .label("Password"),
-    name: Joi.string()
+    email: Joi.string()
       .required()
-      .label("Name")
+      .email()
+      .label("Email")
   };
 
   doSubmit = async () => {
@@ -32,7 +32,7 @@ class RegisterForm extends Form {
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
-        errors.username = ex.response.data;
+        errors.email = ex.response.data;
         this.setState({ errors });
       }
     }
@@ -44,7 +44,7 @@ class RegisterForm extends Form {
         <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInputField("username", "Username")}
-          {this.renderInputField("name", "Name")}
+          {this.renderInputField("email", "Email")}
           {this.renderInputField("password", "Password", "password")}
 
           {this.renderSubmitButton("Register")}
