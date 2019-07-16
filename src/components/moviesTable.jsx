@@ -34,6 +34,11 @@ class MoviesTable extends Component {
     )
   };
 
+  //Equal to component did mount
+  // useEffect(()=> {
+  //
+  // }, [])
+
   constructor() {
     super();
     const user = auth.getCurrentUser();
