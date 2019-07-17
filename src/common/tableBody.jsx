@@ -17,13 +17,17 @@ const TableBody = props => {
   const { data, columns } = props;
   return (
     <tbody>
-      {data.map(item => (
-        <tr key={item._id}>
-          {columns.map(column => (
-            <td key={createKey(item, column)}>{renderCell(item, column)}</td>
-          ))}
-        </tr>
-      ))}
+      {columns
+        ? data.map(item => (
+            <tr key={item._id}>
+              {columns.map(column => (
+                <td key={createKey(item, column)}>
+                  {renderCell(item, column)}
+                </td>
+              ))}
+            </tr>
+          ))
+        : null}
     </tbody>
   );
 };

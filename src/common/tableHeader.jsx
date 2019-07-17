@@ -25,16 +25,18 @@ const TableHeader = props => {
   return (
     <thead>
       <tr>
-        {columns.map(column => (
-          <th
-            className="clickable"
-            key={column.path || column.key}
-            onClick={() => raiseSort(column.path, sortColumn, onSort)}
-            scope="col"
-          >
-            {column.label} {renderSortIcon(column, sortColumn)}
-          </th>
-        ))}
+        {columns
+          ? columns.map(column => (
+              <th
+                className="clickable"
+                key={column.path || column.key}
+                onClick={() => raiseSort(column.path, sortColumn, onSort)}
+                scope="col"
+              >
+                {column.label} {renderSortIcon(column, sortColumn)}
+              </th>
+            ))
+          : null}
       </tr>
     </thead>
   );
